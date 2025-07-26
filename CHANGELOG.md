@@ -5,6 +5,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Latest
 
+- Updated to support eBird Basic Dataset v1.16.
+
 ## 0.1.0
 
 - Initial release with loaders and models for the database and a Django Admin module

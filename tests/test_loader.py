@@ -11,4 +11,4 @@ pytestmark = pytest.mark.django_db
 def test_loader():
     call_command(
         "load_dataset",
-        os.path.join(settings.DOWNLOAD_DIR, "ebird_basic_dataset_sample.csv"))
+        os.path.join(settings.DOWNLOAD_DIR, "ebd.csv"))

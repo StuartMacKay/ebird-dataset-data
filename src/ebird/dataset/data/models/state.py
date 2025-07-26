@@ -23,7 +23,11 @@ class State(models.Model):
     )
 
     created = models.DateTimeField(
-        null=True, auto_now_add=True, help_text=_("When was the record created.")
+        auto_now_add=True, help_text=_("When was the record created."),
+    )
+
+    modified = models.DateTimeField(
+        auto_now=True, help_text=_("When was the record updated.")
     )
 
     def __repr__(self) -> str:

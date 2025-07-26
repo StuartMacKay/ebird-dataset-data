@@ -1,60 +1,36 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-# All the protocols from Appendices 2 and 3 of the eBird Basic Dataset
-# Metadata V1.14 description.
-
-PROTOCOL_TYPE = {
-    "P22": _("Travelling"),
-    "P21": _("Stationary"),
-    "P62": _("Historical"),
-    "P20": _("Incidental"),
-    "P23": _("Area"),
-    "P33": _("Banding"),
-    "P60": _("Pelagic"),
-    "P54": _("Nocturnal Flight Call Count"),
-    "P52": _("Oiled Birds"),
-    "P48": _("Random"),
-    "P59": _("TNC California Waterbird Count"),
-    "P46": _("CWC Point Count"),
-    "P47": _("CWC Area Search"),
-    "P80": _("CWC Travelling Count"),
-    "P41": _("Rusty Blackbird Spring Migration Blitz"),
-    "P69": _("California Brown Pelican Survey"),
-    "P73": _("PROALAS Point Count (2 Bands)"),
-    "P81": _("PROALAS Mini-transect"),
-    "P82": _("PROALAS Point Count (3 Bands)"),
-    "P83": _("Orange-breasted Falcon Site Survey"),
-    "P58": _("Audubon Coastal Bird Survey"),
-    "P74": _("International Shorebird Survey"),
-    "P84": _("Migratory Shorebird Protocol"),
-    "P70": _("BirdLife Australia 20min-2ha survey"),
-    "P72": _("BirdLife Australia 5 km radius search"),
-    "P71": _("BirdLife Australia 500m radius search"),
-    "P66": _("Birds 'n' Bogs Survey"),
-    "P65": _("Breeding Bird Atlas"),
-    "P67": _("Common Bird Survey"),
-    "P50": _("Caribbean Martin Survey"),
-    "P49": _("Coastal Shorebird Survey"),
-    "P57": _("Great Texas Birding Classic"),
-    "P51": _("Greater Gulf Refuge Waterbird Count"),
-    "P56": _("Heron Area Count"),
-    "P55": _("Heron Stationary Count"),
-    "P61": _("IBA Canada"),
-    "P39": _("LoonWatch"),
-    "P35": _("My Yard Counts"),
-    "P68": _("RAM--Iberian Seawatch Network"),
-    "P40": _("Standardized Yard Count"),
-    "P30": _("Trail Tracker"),
-    "P75": _("Tricolored Blackbird Winter Survey"),
-    "P64": _("Traveling - Property Specific"),
-    "P34": _("Waterbird Count"),
-    "P44": _("Yellow-billed Magpie Survey - General Observations"),
-    "P45": _("Yellow-billed Magpie Survey - Traveling Count"),
-}
-
 
 class Checklist(models.Model):
+    class Category(models.TextChoices):
+        INCIDENTAL = "Incidental", _("Incidental")
+        STATIONARY = "Stationary", _("Stationary")
+        TRAVELING = "Traveling", _("Traveling")
+        AREA = "Area", _("Area")
+        BANDING = "Banding", _("Banding")
+        NOCTURNAL = "Nocturnal flight call Count", _("Nocturnal Flight Call Count")
+        PELAGIC = "eBird Pelagic Protocol", _("eBird Pelagic Protocol")
+        HISTORICAL = "Historical", _("Historical")
+
+    class Protocol(models.TextChoices):
+        INCIDENTAL = "P20",  _("Incidental")
+        STATIONARY = "P21",  _("Stationary")
+        TRAVELING = "P22", _("Traveling")
+        AREA = "P23", _("Area")
+        BANDING = "P33",  _("Banding")
+        NOCTURNAL = "P54", _("Nocturnal Flight Call Count")
+        PELAGIC = "P60", _("eBird Pelagic Protocol")
+        HISTORICAL = "P62", _("Historical")
+        STATIONARY_2_025 = "P67", _("Stationary (2-band, 25m)"),
+        STATIONARY_2_030 = "P73", _("Stationary (2-band, 30m)"),
+        STATIONARY_2_050 = "P88", _("Stationary (2-band, 50m)"),
+        STATIONARY_2_075 = "P87", _("Stationary (2-band, 75m)"),
+        STATIONARY_2_100 = "P89", _("Stationary (2-band, 100m)"),
+        STATIONARY_3_030 = "P82", _("Stationary (3-band, 30m+100m)"),
+        TRAVELING_2_025 = "P81", _("Traveling (2-band, 25m)"),
+        DIRECTIONAL = "P68", _("Stationary (directional)"),
+
     class Meta:
         verbose_name = _("checklist")
         verbose_name_plural = _("checklists")
@@ -64,11 +40,6 @@ class Checklist(models.Model):
         primary_key=True,
         verbose_name=_("identifier"),
         help_text=_("The unique identifier for the checklist."),
-    )
-
-    created = models.DateTimeField(
-        auto_now_add=True,
-        help_text=_("When was the record created."),
     )
 
     edited = models.DateTimeField(
@@ -127,15 +98,13 @@ class Checklist(models.Model):
     )
 
     observer_count = models.IntegerField(
-        blank=True,
-        null=True,
+        default=0,
         verbose_name=_("observer count"),
         help_text=_("The total number of observers."),
     )
 
     species_count = models.IntegerField(
-        blank=True,
-        null=True,
+        default=0,
         verbose_name=_("species count"),
         help_text=_("The number of species reported."),
     )
@@ -161,22 +130,33 @@ class Checklist(models.Model):
         help_text=_("The date and time the observations were made."),
     )
 
-    protocol = models.TextField(
-        blank=True,
-        verbose_name=_("protocol"),
-        help_text=_("The protocol followed, e.g. travelling, stationary, etc."),
+    observation_type = models.TextField(
+        verbose_name=_("observation type"),
+        help_text=_("The type of protocol followed."),
     )
 
-    protocol_code = models.TextField(
-        blank=True,
+    protocol_name = models.TextField(
+        verbose_name=_("protocol name"),
+        help_text=_("The name of protocol followed."),
+    )
+
+    protocol_code = models.CharField(
+        max_length=3,
+        db_index=True,
         verbose_name=_("protocol code"),
         help_text=_("The code used to identify the protocol."),
     )
 
-    project_code = models.TextField(
+    project_names = models.TextField(
         blank=True,
-        verbose_name=_("project code"),
-        help_text=_("The code used to identify the project (portal)."),
+        verbose_name=_("project names"),
+        help_text=_("The names used to identify the project (portal)."),
+    )
+
+    project_identifiers = models.TextField(
+        blank=True,
+        verbose_name=_("project identifiers"),
+        help_text=_("The identifiers used for the project (portal)."),
     )
 
     duration = models.IntegerField(
@@ -216,10 +196,14 @@ class Checklist(models.Model):
         help_text=_("Any comments about the checklist."),
     )
 
-    url = models.URLField(
-        blank=True,
-        verbose_name=_("url"),
-        help_text=_("URL where the original checklist can be viewed."),
+    created = models.DateTimeField(
+        auto_now_add=True,
+        help_text=_("When was the record created."),
+    )
+
+    modified = models.DateTimeField(
+        auto_now_add=True,
+        help_text=_("When was the record modified."),
     )
 
     def __repr__(self) -> str:

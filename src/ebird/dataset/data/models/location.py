@@ -1,17 +1,16 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-LOCATION_TYPE = {
-    "C": _("County"),
-    "H": _("Hotspot"),
-    "P": _("Personal"),
-    "PC": _("Postal/Zip Code"),
-    "S": _("State"),
-    "T": _("Town"),
-}
-
 
 class Location(models.Model):
+    class Type(models.TextChoices):
+        COUNTY = "C", _("County"),
+        HOTSPOT = "H", _("Hotspot"),
+        PERSONAL = "P", _("Personal"),
+        POSTAL = "PC", _("Postal/Zip Code"),
+        STATE = "S", _("State"),
+        TOWN = "T", _("Town"),
+
     class Meta:
         verbose_name = _("location")
         verbose_name_plural = _("locations")
@@ -23,13 +22,10 @@ class Location(models.Model):
         help_text=_("The unique identifier for the location."),
     )
 
-    created = models.DateTimeField(
-        auto_now_add=True,
-        help_text=_("When was the record created."),
-    )
-
-    type = models.TextField(
-        blank=True,
+    type = models.CharField(
+        max_length=2,
+        choices=Type,
+        db_index=True,
         verbose_name=_("type"),
         help_text=_("The location type, e.g. personal, hotspot, town, etc."),
     )
@@ -109,17 +105,12 @@ class Location(models.Model):
         ),
     )
 
-    url = models.URLField(
-        blank=True,
-        verbose_name=_("url"),
-        help_text=_("URL of the location page on eBird."),
+    created = models.DateTimeField(
+        auto_now_add=True, help_text=_("When was the record created."),
     )
 
-    hotspot = models.BooleanField(
-        blank=True,
-        null=True,
-        verbose_name=_("is hotspot"),
-        help_text=_("Is the location a hotspot."),
+    modified = models.DateTimeField(
+        auto_now=True, help_text=_("When was the record updated.")
     )
 
     def __repr__(self) -> str:

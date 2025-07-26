@@ -68,7 +68,6 @@ class BasicDatasetLoader:
             "bcr_code": data["BCR CODE"],
             "usfws_code": data["USFWS CODE"],
             "atlas_block": data["ATLAS BLOCK"],
-            "url": "https://ebird.org/region/%s" % identifier,
         }
 
         if data["COUNTY CODE"]:
@@ -89,6 +88,7 @@ class BasicDatasetLoader:
 
         values: dict = {
             "identifier": identifier,
+            "orcid": data["OBSERVER ORCID ID"],
             "name": "",
         }
 
@@ -189,18 +189,19 @@ class BasicDatasetLoader:
             "location": location,
             "observer": observer,
             "group": row["GROUP IDENTIFIER"],
-            "observer_count": row["NUMBER OBSERVERS"],
+            "observer_count": row["NUMBER OBSERVERS"] or 0,
             "date": dt.datetime.strptime(row["OBSERVATION DATE"], "%Y-%m-%d").date(),
             "time": None,
-            "protocol": row["PROTOCOL TYPE"],
+            "observation_type": row["OBSERVATION TYPE"],
+            "protocol_name": row["PROTOCOL NAME"],
             "protocol_code": row["PROTOCOL CODE"],
-            "project_code": row["PROJECT CODE"],
+            "project_names": row["PROJECT NAMES"],
+            "project_identifiers": row["PROJECT IDENTIFIERS"],
             "duration": None,
             "distance": None,
             "area": None,
             "complete": bool(row["ALL SPECIES REPORTED"]),
-            "comments": row["TRIP COMMENTS"] or "",
-            "url": "https://ebird.org/checklist/%s" % identifier,
+            "comments": row["CHECKLIST COMMENTS"] or "",
         }
 
         if time := row["TIME OBSERVATIONS STARTED"]:
@@ -248,8 +249,6 @@ class BasicDatasetLoader:
                 self.add_observation(row, checklist, species)
 
                 if species.category == "species":
-                    if checklist.species_count is None:
-                        checklist.species_count = 0
                     checklist.species_count += 1
                     checklist.save()
 

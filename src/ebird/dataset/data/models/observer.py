@@ -14,15 +14,24 @@ class Observer(models.Model):
         help_text=_("The identifier for the person submitted the checklist."),
     )
 
-    created = models.DateTimeField(
-        auto_now_add=True,
-        help_text=_("When was the record created."),
+    orcid = models.TextField(
+        blank=True,
+        verbose_name=_("ORCID Identifier"),
+        help_text=_("The observer's ORCID Identifier, see https://orcid.org/."),
     )
 
     name = models.TextField(
         blank=True,
         verbose_name=_("name"),
         help_text=_("The observer's name."),
+    )
+
+    created = models.DateTimeField(
+        auto_now_add=True, help_text=_("When was the record created."),
+    )
+
+    modified = models.DateTimeField(
+        auto_now=True, help_text=_("When was the record updated.")
     )
 
     def __repr__(self):

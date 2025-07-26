@@ -78,7 +78,7 @@ class ChecklistAdmin(admin.ModelAdmin):
         "complete",
         "observer_count",
         "group",
-        "protocol",
+        "protocol_name",
         "protocol_code",
         "duration",
         "distance",
