@@ -4,7 +4,7 @@ abstract:
 authors:
   - name: Stuart MacKay
 cff-version: 1.2.0
-date-released: 2025-07-17
+date-released: 2025-07-26
 keywords:
   - Django
   - eBird
@@ -17,4 +17,4 @@ license: MIT License
 message: If you use this software, please cite it using the metadata from this file.
 repository-code: "https://github.com/StuartMacKay/ebird-dataset-data"
 title: eBird Dataset Data
-version: 0.1.0
+version: 0.2.0

@@ -5,6 +5,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Latest
 
+## 0.2.0
+
 - Updated to support eBird Basic Dataset v1.16.
 
 ## 0.1.0
