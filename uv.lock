@@ -270,21 +270,11 @@ wheels = [
 ]
 
 [[package]]
-name = "ebird-codes"
-version = "0.0.2"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/bb/2d/b130de7fcdc28c43c961e6fcb86e70ff137b160838b91a4961c582b3163c/ebird_codes-0.0.2.tar.gz", hash = "sha256:c7e956ce86e85d0729969b3e444abd260e432090a195db7e2d8a15e36dd86084", size = 5570, upload-time = "2025-02-14T16:12:14.467Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/58/d7/f17a061230139b4e587a43e4ece706470c1661759da8bcc865e24cfa4ab2/ebird_codes-0.0.2-py3-none-any.whl", hash = "sha256:854e0549e1eb520145d9ad701ca227c993f16505471b16ed97f2d7ea7de2d1df", size = 5451, upload-time = "2025-02-14T16:12:12.433Z" },
-]
-
-[[package]]
 name = "ebird-dataset-data"
 version = "0.2.0"
 source = { editable = "." }
 dependencies = [
     { name = "django" },
-    { name = "ebird-codes" },
 ]
 
 [package.dev-dependencies]
@@ -307,10 +297,7 @@ dev = [
 ]
 
 [package.metadata]
-requires-dist = [
-    { name = "django", specifier = ">=4.2" },
-    { name = "ebird-codes", specifier = ">=0.0.2" },
-]
+requires-dist = [{ name = "django", specifier = ">=4.2" }]
 
 [package.metadata.requires-dev]
 dev = [
